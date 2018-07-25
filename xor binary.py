@@ -8,7 +8,7 @@ class EncryptionFrame(QFrame):
     def __init__(self):
         super().__init__()
 
-        self.key = 0x00
+        self.key = bytearray(0x00)
         self.randomKey = False
 
         self.resize(400, 200)
@@ -80,7 +80,7 @@ class EncryptionFrame(QFrame):
         if not self.randomKey and self.key == 0x00:
             return
 
-        if self.inputEdit.text() != "" and self.inputEdit.text != "Path not found":
+        if self.inputEdit.text() != "" and self.inputEdit.text() != "Path not found":
             with open(self.inputEdit.text(), 'rb') as inf:
                 data = inf.read()
                 if self.randomKey:
@@ -89,7 +89,7 @@ class EncryptionFrame(QFrame):
             return
 
         data2 = self.xordata(data, self.key)
-        if self.outputEdit.text() != "" and self.outputEdit.text != "Path not found":
+        if self.outputEdit.text() != "" and self.outputEdit.text() != "Path not found":
             with open(self.outputEdit.text(), 'wb') as outf:
                 outf.write(data2)
         else:
@@ -106,6 +106,7 @@ class EncryptionFrame(QFrame):
 
     @pyqtSlot()
     def on_key_select_click(self):
+        self.randomKey = False
         file, _filter = QFileDialog.getOpenFileName(self, "Select Key", QDir.currentPath())
 
         if file != "":
